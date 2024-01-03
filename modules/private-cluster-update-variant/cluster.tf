@@ -290,7 +290,12 @@ resource "google_container_cluster" "primary" {
       image_type       = lookup(var.node_pools[0], "image_type", "COS_CONTAINERD")
       machine_type     = lookup(var.node_pools[0], "machine_type", "e2-medium")
       min_cpu_platform = lookup(var.node_pools[0], "min_cpu_platform", "")
-
+      dynamic "gcfs_config" {
+        for_each = lookup(var.node_pools[0], "enable_gcfs", false) ? [true] : []
+        content {
+          enabled = gcfs_config.value
+        }
+      }
 
       dynamic "gvnic" {
         for_each = lookup(var.node_pools[0], "enable_gvnic", false) ? [true] : []
@@ -426,6 +431,7 @@ locals {
     "preemptible",
     "spot",
     "service_account",
+    "enable_gcfs",
     "enable_gvnic",
     "enable_secure_boot",
     "boot_disk_kms_key",
@@ -549,6 +555,12 @@ resource "google_container_node_pool" "pools" {
     image_type       = lookup(each.value, "image_type", "COS_CONTAINERD")
     machine_type     = lookup(each.value, "machine_type", "e2-medium")
     min_cpu_platform = lookup(each.value, "min_cpu_platform", "")
+    dynamic "gcfs_config" {
+      for_each = lookup(each.value, "enable_gcfs", false) ? [true] : []
+      content {
+        enabled = gcfs_config.value
+      }
+    }
     dynamic "gvnic" {
       for_each = lookup(each.value, "enable_gvnic", false) ? [true] : []
       content {
@@ -739,6 +751,12 @@ resource "google_container_node_pool" "windows_pools" {
     image_type       = lookup(each.value, "image_type", "COS_CONTAINERD")
     machine_type     = lookup(each.value, "machine_type", "e2-medium")
     min_cpu_platform = lookup(each.value, "min_cpu_platform", "")
+    dynamic "gcfs_config" {
+      for_each = lookup(each.value, "enable_gcfs", false) ? [true] : []
+      content {
+        enabled = gcfs_config.value
+      }
+    }
     dynamic "gvnic" {
       for_each = lookup(each.value, "enable_gvnic", false) ? [true] : []
       content {
