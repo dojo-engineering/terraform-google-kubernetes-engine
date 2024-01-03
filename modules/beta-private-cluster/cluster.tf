@@ -349,7 +349,7 @@ resource "google_container_cluster" "primary" {
       machine_type     = lookup(var.node_pools[0], "machine_type", "e2-medium")
       min_cpu_platform = lookup(var.node_pools[0], "min_cpu_platform", "")
       dynamic "gcfs_config" {
-        for_each = lookup(var.node_pools[0], "enable_gcfs", var.enable_gcfs) ? [true] : []
+        for_each = lookup(var.node_pools[0], "enable_gcfs", false) ? [true] : []
         content {
           enabled = gcfs_config.value
         }
@@ -477,7 +477,11 @@ resource "google_container_cluster" "primary" {
   }
 
   node_pool_defaults {
-    node_config_defaults {}
+    node_config_defaults {
+      gcfs_config {
+        enabled = var.enable_gcfs
+      }
+    }
   }
 }
 /******************************************
