@@ -564,8 +564,11 @@ resource "google_container_node_pool" "pools" {
     image_type       = lookup(each.value, "image_type", "COS_CONTAINERD")
     machine_type     = lookup(each.value, "machine_type", "e2-medium")
     min_cpu_platform = lookup(each.value, "min_cpu_platform", "")
-    gcfs_config {
-      enabled = lookup(each.value, "enable_gcfs", false)
+    dynamic "gcfs_config" {
+      for_each = lookup(each.value, "enable_gcfs", false) ? [true] : []
+      content {
+        enabled = gcfs_config.value
+      }
     }
     dynamic "gvnic" {
       for_each = lookup(each.value, "enable_gvnic", false) ? [true] : []
