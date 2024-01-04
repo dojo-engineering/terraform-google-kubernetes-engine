@@ -1,3 +1,13 @@
+# Dojo Fork of Terraform Kubernetes Engine Module
+
+## Customisations
+
+This repo is a fork of [terraform-google-kubernetes-engine](https://github.com/terraform-google-modules/terraform-google-kubernetes-engine), 
+the end goal should be to deprecate the need for this fork. At the moment we are tracking the following issues before that happens:
+- [Upgrading from v21 to v29 forces node pool recreation due to gcfs_config](https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/issues/1823)
+
+This repo is currently being consumed by Payments Platform for the provisioning of PCI and Non PCI GKE clusters.
+
 # Terraform Kubernetes Engine Module
 
 This module handles opinionated Google Cloud Platform Kubernetes Engine cluster creation and configuration with Node Pools, IP MASQ, Network Policy, etc.
